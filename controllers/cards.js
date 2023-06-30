@@ -28,9 +28,9 @@ const deleteCard = async (req, res) => {
     if (!card) {
       return res.status(404).json({ error: 'Карточка не найдена' });
     }
-    res.status(200).json(card);
+    return res.status(200).json(card);
   } catch (error) {
-    res.status(500).json({ error: 'Ошибка сервера' });
+    return res.status(500).json({ error: 'Ошибка сервера' });
   }
 };
 

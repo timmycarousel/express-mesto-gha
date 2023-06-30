@@ -22,9 +22,9 @@ const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Пользователь не найден' });
     }
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
-    res
+    return res
       .status(ERROR_CODE)
       .json({ message: 'Ошибка при получении пользователя' });
   }

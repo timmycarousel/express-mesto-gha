@@ -15,11 +15,11 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log('Подключено к MongoDB');
-  })
-  .catch((error) => {
-    console.error('Ошибка подключения к MongoDB:', error);
+    // console.log('Подключено к MongoDB');
   });
+// .catch((error) => {
+//   console.error('Ошибка подключения к MongoDB:', error);
+// });
 
 // Обработчик GET-запроса на корневой URL
 app.get('/', (req, res) => {
@@ -32,7 +32,7 @@ app.use('/cards', cardsRouter);
 
 // Запуск сервера на порту 3000
 app.listen(3000, () => {
-  console.log('Сервер запущен на порту 3000');
+  // console.log('Сервер запущен на порту 3000');
 });
 
 module.exports = app;
