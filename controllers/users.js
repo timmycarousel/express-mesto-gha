@@ -6,7 +6,7 @@ const ERROR_CODE = 400;
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find({});
     res.status(200).json(users);
   } catch (error) {
     res
@@ -33,7 +33,7 @@ const createUser = async (req, res) => {
   try {
     const { name, about, avatar } = req.body;
     const user = await User.create({ name, about, avatar });
-    return res.status(200).json(user);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(ERROR_CODE).json({ message: 'Ошибка при создании пользователя' });
   }
