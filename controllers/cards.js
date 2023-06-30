@@ -47,7 +47,6 @@ const likeCard = async (req, res) => {
     res.status(500).json({ error: "Ошибка сервера" });
   }
 };
-
 // DELETE /cards/:cardId/likes — убрать лайк с карточки
 const dislikeCard = async (req, res) => {
   try {
@@ -61,7 +60,6 @@ const dislikeCard = async (req, res) => {
     res.status(500).json({ error: "Ошибка сервера" });
   }
 };
-
 module.exports = {
   getCards,
   createCard,
