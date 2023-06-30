@@ -42,8 +42,28 @@ const createUser = async (req, res) => {
       .json({ message: 'Ошибка при создании пользователя' });
   }
 };
+
+// PATCH /users/:userId - обновляет профиль пользователя
+const updateUser = async (req, res) => {
+  try {
+    const { name, about } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.userId,
+      { name, about },
+      { new: true },
+    );
+    if (!user) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(400).json({ message: 'Ошибка при обновлении профиля пользователя' });
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
+  updateUser,
 };
