@@ -13,13 +13,21 @@ mongoose
   .connect('mongodb://localhost:27017/mestodb', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then(() => {
-    // console.log('Подключено к MongoDB');
   });
+// .then(() => {
+//   console.log('Подключено к MongoDB');
+// })
 // .catch((error) => {
 //   console.error('Ошибка подключения к MongoDB:', error);
 // });
+
+// Мидлвэр для временного решения авторизации
+app.use((req, res, next) => {
+  req.user = {
+    _id: '649ea437d0723cd18ad069d3',
+  };
+  next();
+});
 
 // Обработчик GET-запроса на корневой URL
 app.get('/', (req, res) => {
