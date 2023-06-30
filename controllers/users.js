@@ -1,8 +1,9 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const ERROR_CODE = 400;
 
 // GET /users — возвращает всех пользователей
+
 const getUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -10,7 +11,7 @@ const getUsers = async (req, res) => {
   } catch (error) {
     res
       .status(ERROR_CODE)
-      .json({ message: "Ошибка при получении пользователей" });
+      .json({ message: 'Ошибка при получении пользователей' });
   }
 };
 
@@ -19,13 +20,13 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
-      return res.status(404).json({ message: "Пользователь не найден" });
+      return res.status(404).json({ message: 'Пользователь не найден' });
     }
     res.status(200).json(user);
   } catch (error) {
     res
       .status(ERROR_CODE)
-      .json({ message: "Ошибка при получении пользователя" });
+      .json({ message: 'Ошибка при получении пользователя' });
   }
 };
 
@@ -38,7 +39,7 @@ const createUser = async (req, res) => {
   } catch (error) {
     res
       .status(ERROR_CODE)
-      .json({ message: "Ошибка при создании пользователя" });
+      .json({ message: 'Ошибка при создании пользователя' });
   }
 };
 
