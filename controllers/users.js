@@ -24,9 +24,7 @@ const getUserById = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    return res
-      .status(ERROR_CODE)
-      .json({ message: 'Ошибка при получении пользователя' });
+    return res.status(ERROR_CODE).json({ message: 'Ошибка при получении пользователя' });
   }
 };
 
@@ -35,11 +33,9 @@ const createUser = async (req, res) => {
   try {
     const { name, about, avatar } = req.body;
     const user = await User.create({ name, about, avatar });
-    res.status(201).json(user);
+    return res.status(201).json(user);
   } catch (error) {
-    res
-      .status(ERROR_CODE)
-      .json({ message: 'Ошибка при создании пользователя' });
+    return res.status(ERROR_CODE).json({ message: 'Ошибка при создании пользователя' });
   }
 };
 
