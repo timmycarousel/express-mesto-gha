@@ -42,7 +42,6 @@ const createUser = async (req, res) => {
       .json({ message: 'Ошибка при создании пользователя' });
   }
 };
-
 module.exports = {
   getUsers,
   getUserById,
