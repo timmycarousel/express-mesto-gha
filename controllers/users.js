@@ -53,7 +53,7 @@ const updateUser = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(400).json({ message: 'Ошибка при обновлении профиля пользователя' });
+    return res.status(ERROR_CODE).json({ message: 'Ошибка при обновлении профиля пользователя' });
   }
 };
 
