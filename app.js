@@ -9,13 +9,12 @@ const cardsRouter = require('./routes/cards');
 app.use(bodyParser.json());
 
 // Подключение к серверу MongoDB
-mongoose
-  .connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
 // Мидлвэр для временного решения авторизации
 app.use((req, res, next) => {
   req.user = {
-    _id: '',
+    _id: '649ea3ecd26dda6c5255abeb',
   };
   next();
 });
