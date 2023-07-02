@@ -48,14 +48,16 @@ const deleteCard = (req, res) => {
 
 // PUT /cards/:cardId/likes - добавляет лайк карточке
 const likeCard = (req, res) => {
-  if (!req.params.cardId) {
+  const { cardId } = req.params;
+
+  if (!cardId || typeof cardId !== 'string') {
     return res
       .status(ERROR_CODE)
-      .json({ error: 'Переданы некорректные данные для постановки лайка' });
+      .json({ error: 'Передан некорректный _id карточки' });
   }
 
   return Card.findByIdAndUpdate(
-    req.params.cardId,
+    cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
@@ -63,14 +65,14 @@ const likeCard = (req, res) => {
       if (!card) {
         return res
           .status(404)
-          .json({ error: 'Передан несуществующий _id карточки' });
+          .json({ error: 'Карточка с указанным _id не найдена' });
       }
       return res.status(200).json(card);
     })
     .catch(() => {
-      res.status(ERROR_CODE).json({
-        error: 'Переданы некорректные данные для постановки лайка',
-      });
+      res
+        .status(ERROR_CODE)
+        .json({ error: 'Ошибка при добавлении лайка карточке' });
     });
 };
 
