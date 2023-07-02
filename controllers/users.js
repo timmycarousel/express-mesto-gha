@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require("../models/user");
 
 const ERROR_CODE = 400;
 
@@ -10,7 +10,7 @@ const getUsers = (req, res) => {
     })
     .catch(() => {
       res.status(ERROR_CODE).json({
-        message: ' Переданы некорректные данные при создании пользователя',
+        message: " Переданы некорректные данные при создании пользователя",
       });
     });
 };
@@ -22,13 +22,13 @@ const getUserById = (req, res) => {
       if (!user) {
         return res
           .status(404)
-          .json({ message: 'Пользователь по указанному _id не найден' });
+          .json({ message: "Пользователь по указанному _id не найден" });
       }
       return res.status(200).json(user);
     })
     .catch(() => {
       res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при запросе пользователя',
+        message: "Переданы некорректные данные при запросе пользователя",
       });
     });
 };
@@ -42,7 +42,7 @@ const createUser = (req, res) => {
     })
     .catch(() => {
       res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при создании пользователя',
+        message: "Переданы некорректные данные при создании пользователя",
       });
     });
 };
@@ -56,12 +56,12 @@ const updateUser = (req, res) => {
       if (!user) {
         res
           .status(404)
-          .json({ message: 'Пользователь по указанному _id не найден' });
+          .json({ message: "Пользователь по указанному _id не найден" });
       }
     })
     .catch(() => {
-      res.status(500).json({
-        message: 'Внутренняя ошибка сервера',
+      res.status(ERROR_CODE).json({
+        message: "Внутренняя ошибка сервера",
       });
     });
 };
@@ -73,13 +73,13 @@ const updateUserAvatar = (req, res) => {
       if (!user) {
         return res
           .status(404)
-          .json({ message: 'Пользователь с указанным _id не найден' });
+          .json({ message: "Пользователь с указанным _id не найден" });
       }
       return res.status(200).json(user);
     })
     .catch(() => {
       res.status(ERROR_CODE).json({
-        message: ' Переданы некорректные данные при обновлении аватара',
+        message: " Переданы некорректные данные при обновлении аватара",
       });
     });
 };
