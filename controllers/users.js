@@ -41,15 +41,18 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { name, about } = req.body;
-    const user = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       { name, about },
       { new: true },
     );
-    if (!user) {
+    if (!updatedUser) {
       return res.status(404).json({ message: 'Пользователь с указанным _id не найден' });
     }
-    return res.status(200).json(user);
+    const { _id, name: updatedName, about: updatedAbout } = updatedUser;
+    return res.status(200).json({
+      _id, name: updatedName, about: updatedAbout, status: 200,
+    });
   } catch (error) {
     return res.status(SERVER_ERROR_CODE).json({ message: 'Внутренняя ошибка сервера' });
   }
