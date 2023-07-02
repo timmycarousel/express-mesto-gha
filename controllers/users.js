@@ -22,7 +22,7 @@ const getUserById = (req, res) => {
       res.status(200).json(user);
       if (!user) {
         res
-          .status(400)
+          .status(404)
           .json({ message: 'Пользователь по указанному _id не найден' });
       }
     })
