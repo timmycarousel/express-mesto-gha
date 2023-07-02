@@ -35,4 +35,14 @@ app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страницы не существует' });
 });
 
+app.use((err, req, res) => {
+  if (err.status === 400) {
+    res.status(400).json({ message: 'Переданы некорректные данные' });
+  }
+  if (err.status === 404) {
+    res.status(404).json({ message: 'Ресурс не найден' });
+  }
+  res.status(500).json({ message: 'На сервере произошла ошибка' });
+});
+
 module.exports = app;
