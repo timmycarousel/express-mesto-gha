@@ -62,8 +62,10 @@ const updateUser = (req, res) => {
     })
     .catch(() => {
       res
-        .status(SERVER_ERROR_CODE)
-        .json({ message: 'Внутренняя ошибка сервера' });
+        .status(ERROR_CODE)
+        .json({
+          message: 'Переданы некорректные данные при создании пользователя',
+        });
     });
 };
 
