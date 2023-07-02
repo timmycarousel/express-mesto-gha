@@ -94,7 +94,7 @@ const dislikeCard = (req, res) => {
       if (!card) {
         return res
           .status(404)
-          .json({ error: 'Карточка с указанным _id не найдена' });
+          .json({ message: 'Карточка с указанным _id не найдена' });
       }
       return res.status(200).json(card);
     })
