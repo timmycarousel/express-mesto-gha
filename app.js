@@ -29,24 +29,7 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 // Запуск сервера на порту 3000
-app.listen(3000, () => {
-  // console.log('Сервер запущен на порту 3000');
-});
-
-// app.use((req, res, next) => {
-//   const error = new Error('Not Found');
-//   error.status = 404;
-//   next(error);
-// });
-
-// app.use((error, req, res) => {
-//   res.status(error.status || 500);
-//   res.json({
-//     message: {
-//       message: error.message || 'Internal Server Error',
-//     },
-//   });
-// });
+app.listen(3000);
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страницы не существует' });
