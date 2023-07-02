@@ -17,7 +17,7 @@ router.get('/', getUsers);
 router.get('/:userId', getUserById);
 
 // PATCH /users/:userId - обновляет профиль пользователя
-router.patch('/:userId', updateUser);
+router.patch('/me', updateUser);
 
 // PATCH /users/me/avatar - обновляет аватар пользователя
 router.patch('/me/avatar', updateUserAvatar);
