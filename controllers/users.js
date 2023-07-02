@@ -74,7 +74,7 @@ const updateUser = (req, res) => {
           message: 'Внутренняя ошибка сервера',
         });
       });
-  }
+  } else { res.status(400).send({ message: 'Недопустимая длинна вводимых данных' }); }
 };
 
 const updateUserAvatar = (req, res) => {
