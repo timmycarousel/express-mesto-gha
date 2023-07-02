@@ -224,7 +224,7 @@ const dislikeCard = (req, res) => {
       if (!card) {
         return errorHandler(
           res,
-          ERROR_CODE.BAD_REQUEST,
+          ERROR_CODE.NOT_FOUND,
           'Карточка с указанным _id не найдена',
         );
       }
