@@ -11,7 +11,7 @@ const createUser = (req, res) => {
       res.send(user);
     })
     .catch(() => {
-      res.status(ERROR_CODE).json({
+      res.status(ERROR_CODE).send({
         message: 'Переданы некорректные данные при создании пользователя',
       });
     });
