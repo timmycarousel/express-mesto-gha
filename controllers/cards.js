@@ -167,7 +167,7 @@ const deleteCard = (req, res) => {
       return res.status(200).json(card);
     })
     .catch(() => {
-      errorHandler(res, ERROR_CODE.DEFAULT, 'На сервере произошла ошибка');
+      errorHandler(res, ERROR_CODE.BAD_REQUEST, 'На сервере произошла ошибка');
     });
 };
 
@@ -199,7 +199,7 @@ const likeCard = (req, res) => {
       return res.status(200).json(card);
     })
     .catch(() => {
-      errorHandler(res, ERROR_CODE.DEFAULT, 'На сервере произошла ошибка');
+      errorHandler(res, ERROR_CODE.BAD_REQUEST, 'На сервере произошла ошибка');
     });
 };
 
@@ -224,7 +224,7 @@ const dislikeCard = (req, res) => {
       if (!card) {
         return errorHandler(
           res,
-          ERROR_CODE.NOT_FOUND,
+          ERROR_CODE.BAD_REQUEST,
           'Карточка с указанным _id не найдена',
         );
       }
