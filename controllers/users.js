@@ -48,7 +48,7 @@ const createUser = (req, res) => {
 };
 
 // PATCH /users/me - обновляет информацию о пользователе
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   if (
     req.body.name.lenght > 2
@@ -62,19 +62,17 @@ const updateUser = (req, res) => {
       { new: true, runValidators: true },
     )
       .then((user) => {
-        res.status(200).json(user);
+        // res.status(200).json(user);
         if (!user) {
           res
             .status(404)
             .json({ message: 'Пользователь по указанному _id не найден' });
         }
       })
-      .catch(() => {
-        res.status(ERROR_CODE).json({
-          message: 'Внутренняя ошибка сервера',
-        });
-      });
-  } else { res.status(400).send({ message: 'Недопустимая длинна вводимых данных' }); }
+      .catch(next);
+  } else {
+    res.status(400).send({ message: 'Недопустимая длинна вводимых данных' });
+  }
 };
 
 const updateUserAvatar = (req, res) => {
