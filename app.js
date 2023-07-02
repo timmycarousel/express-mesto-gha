@@ -10,16 +10,7 @@ app.use(bodyParser.json());
 
 // Подключение к серверу MongoDB
 mongoose
-  .connect('mongodb://localhost:27017/mestodb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-// .then(() => {
-//   console.log('Подключено к MongoDB');
-// })
-// .catch((error) => {
-//   console.error('Ошибка подключения к MongoDB:', error);
-// });
+  .connect('mongodb://localhost:27017/mestodb');
 
 // Мидлвэр для временного решения авторизации
 app.use((req, res, next) => {

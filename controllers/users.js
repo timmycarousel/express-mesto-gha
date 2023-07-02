@@ -14,6 +14,9 @@ const createUser = (req, res) => {
       res.status(ERROR_CODE).send({
         message: 'Переданы некорректные данные при создании пользователя',
       });
+      // .catch((error) => {
+      //   res.status(ERROR_CODE).send(error);
+      // })
     });
 };
 
@@ -21,12 +24,12 @@ const createUser = (req, res) => {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(200).json(users);
+      res.send(users);
     })
     .catch(() => {
       res
         .status(SERVER_ERROR_CODE)
-        .json({ message: 'Внутренняя ошибка сервера' });
+        .send({ message: 'Внутренняя ошибка сервера' });
     });
 };
 
