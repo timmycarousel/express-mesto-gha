@@ -48,30 +48,52 @@ const deleteCard = (req, res) => {
 
 // PUT /cards/:cardId/likes - добавляет лайк карточке
 const likeCard = (req, res) => {
-  Card.findByIdAndUpdate(
+  if (!req.params.cardId) {
+    return res
+      .status(ERROR_CODE)
+      .json({ error: 'Переданы некорректные данные для постановки лайка' });
+  }
+
+  return Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
-      res.status(200).json(card);
+      if (!card) {
+        return res
+          .status(404)
+          .json({ error: 'Передан несуществующий _id карточки' });
+      }
+      return res.status(200).json(card);
     })
     .catch(() => {
       res.status(ERROR_CODE).json({
-        error: 'Переданы некорректные данные для постановки/снятия лайка',
+        error: 'Переданы некорректные данные для постановки лайка',
       });
     });
 };
 
 // DELETE /cards/:cardId/likes - убирает лайк с карточки
 const dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(
+  if (!req.params.cardId) {
+    return res
+      .status(ERROR_CODE)
+      .json({ error: 'Переданы некорректные данные для снятия лайка' });
+  }
+
+  return Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
-      res.status(200).json(card);
+      if (!card) {
+        return res
+          .status(404)
+          .json({ error: 'Передан несуществующий _id карточки' });
+      }
+      return res.status(200).json(card);
     })
     .catch(() => {
       res

@@ -69,9 +69,32 @@ const updateUser = (req, res) => {
     });
 };
 
+const updateUserAvatar = (req, res) => {
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: 'Пользователь с указанным _id не найден' });
+      }
+      return res.status(200).json(user);
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ message: 'Ошибка по умолчанию' });
+    });
+};
+
+module.exports = {
+  updateUserAvatar,
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUser,
+  updateUserAvatar,
 };
