@@ -3,6 +3,20 @@ const User = require('../models/user');
 const ERROR_CODE = 400;
 const SERVER_ERROR_CODE = 500;
 
+// POST /users - создаёт пользователя
+const createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch(() => {
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при создании пользователя',
+      });
+    });
+};
+
 // GET /users - возвращает всех пользователей
 const getUsers = (req, res) => {
   User.find({})
@@ -34,20 +48,6 @@ const getUserById = (req, res) => {
     });
 };
 
-// POST /users - создаёт пользователя
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при создании пользователя',
-      });
-    });
-};
-
 // PATCH /users/me - обновляет информацию о пользователе
 const updateUser = (req, res) => {
   const { name, about } = req.body;
@@ -61,11 +61,9 @@ const updateUser = (req, res) => {
       return res.status(200).json(user);
     })
     .catch(() => {
-      res
-        .status(ERROR_CODE)
-        .json({
-          message: 'Переданы некорректные данные при создании пользователя',
-        });
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при создании пользователя',
+      });
     });
 };
 
@@ -81,9 +79,7 @@ const updateUserAvatar = (req, res) => {
       return res.status(200).json(user);
     })
     .catch(() => {
-      res
-        .status(500)
-        .json({ message: 'Ошибка по умолчанию' });
+      res.status(500).json({ message: 'Ошибка по умолчанию' });
     });
 };
 
