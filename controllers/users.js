@@ -19,16 +19,16 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      res.status(200).json(user);
       if (!user) {
-        res
+        return res
           .status(404)
           .json({ message: 'Пользователь по указанному _id не найден' });
       }
+      return res.status(200).json(user);
     })
     .catch(() => {
-      res.status(500).json({
-        message: 'Внутренняя ошибка сервера',
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при запросе пользователя',
       });
     });
 };
