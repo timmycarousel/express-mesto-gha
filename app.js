@@ -34,9 +34,9 @@ app.listen(3000, () => {
 });
 
 app.use((req, res, next) => {
-  const message = new Error('Not Found');
-  message.status.json = 404;
-  next(message);
+  const error = new Error('Not Found');
+  error.status = 404;
+  next(error);
 });
 
 app.use((error, req, res) => {
@@ -46,6 +46,10 @@ app.use((error, req, res) => {
       message: error.message || 'Internal Server Error',
     },
   });
+});
+
+app.get('*', (req, res) => {
+  res.send.json(200, 'Your message goes here');
 });
 
 module.exports = app;
