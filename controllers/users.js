@@ -50,20 +50,31 @@ const createUser = (req, res) => {
 // PATCH /users/me - обновляет информацию о пользователе
 const updateUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.params.userId, { name, about }, { new: true })
-    .then((user) => {
-      res.status(200).json(user);
-      if (!user) {
-        res
-          .status(404)
-          .json({ message: 'Пользователь по указанному _id не найден' });
-      }
-    })
-    .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Внутренняя ошибка сервера',
+  if (
+    req.body.name.lenght > 2
+    && req.body.name.lenght < 30
+    && req.body.about.lenght > 2
+    && req.body.about.lenght < 30
+  ) {
+    User.findByIdAndUpdate(
+      req.params.userId,
+      { name, about },
+      { new: true, runValidators: true },
+    )
+      .then((user) => {
+        res.status(200).json(user);
+        if (!user) {
+          res
+            .status(404)
+            .json({ message: 'Пользователь по указанному _id не найден' });
+        }
+      })
+      .catch(() => {
+        res.status(ERROR_CODE).json({
+          message: 'Внутренняя ошибка сервера',
+        });
       });
-    });
+  }
 };
 
 const updateUserAvatar = (req, res) => {
