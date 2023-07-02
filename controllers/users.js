@@ -57,7 +57,7 @@ const updateUser = (req, res, next) => {
     && req.body.about.length < 30
   ) {
     User.findByIdAndUpdate(
-      req.params.userId,
+      req.user._id,
       { name, about },
       { new: true, runValidators: true },
     )
