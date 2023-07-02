@@ -210,7 +210,7 @@ const dislikeCard = (req, res) => {
   if (!cardId || typeof cardId !== 'string') {
     return errorHandler(
       res,
-      ERROR_CODE.NOT_FOUND,
+      ERROR_CODE.BAD_REQUEST,
       'Передан некорректный _id карточки',
     );
   }
