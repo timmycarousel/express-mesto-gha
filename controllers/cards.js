@@ -39,7 +39,11 @@ const deleteCard = (req, res) => {
       return res.status(200).json(card);
     })
     .catch(() => {
-      res.status(500).json({ message: 'Внутренняя ошибка сервера' });
+      res
+        .status(ERROR_CODE)
+        .json({
+          message: 'Переданы некорректные данные при удалении карточки',
+        });
     });
 };
 
