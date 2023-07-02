@@ -22,7 +22,7 @@ const getUserById = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(SERVER_ERROR_CODE).json({ message: 'Внутренняя ошибка сервера' });
+    return res.status(ERROR_CODE).json({ message: 'Переданы некорректные данные при создании пользователя' });
   }
 };
 
@@ -31,7 +31,7 @@ const createUser = async (req, res) => {
   try {
     const { name, about, avatar } = req.body;
     const user = await User.create({ name, about, avatar });
-    return res.status(201).json(user);
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(ERROR_CODE).json({ message: 'Переданы некорректные данные при создании пользователя' });
   }
