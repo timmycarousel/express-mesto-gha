@@ -71,7 +71,7 @@ const updateUser = (req, res, next) => {
       })
       .catch(next);
   } else {
-    res.status(400).send({ message: 'Недопустимая длина вводимых данных' });
+    res.status(400).json({ message: 'Недопустимая длина вводимых данных' });
   }
 };
 
