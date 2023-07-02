@@ -23,16 +23,15 @@ const getUsers = (req, res) => {
     .then((users) => {
       res.status(200).json(users);
     })
-    .catch(() => {
+    .catch((error) => {
       res
-        .status(SERVER_ERROR_CODE)
-        .json({ message: 'Внутренняя ошибка сервера' });
+        .send(error);
     });
 };
 
 // GET /users/:userId - возвращает пользователя по _id
 const getUserById = (req, res) => {
-  User.findById(req.params._id)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res
@@ -41,10 +40,9 @@ const getUserById = (req, res) => {
       }
       return res.status(200).json(user);
     })
-    .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при создании пользователя',
-      });
+    .catch((error) => {
+      res
+        .send(error);
     });
 };
 
@@ -61,9 +59,11 @@ const updateUser = (req, res) => {
       return res.status(200).json(user);
     })
     .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при создании пользователя',
-      });
+      res
+        .status(ERROR_CODE)
+        .json({
+          message: 'Переданы некорректные данные при создании пользователя',
+        });
     });
 };
 
@@ -79,7 +79,9 @@ const updateUserAvatar = (req, res) => {
       return res.status(200).json(user);
     })
     .catch(() => {
-      res.status(500).json({ message: 'Ошибка по умолчанию' });
+      res
+        .status(500)
+        .json({ message: 'Ошибка по умолчанию' });
     });
 };
 
