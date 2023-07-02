@@ -231,7 +231,7 @@ const dislikeCard = (req, res) => {
       return res.status(200).json(card);
     })
     .catch(() => {
-      errorHandler(res, ERROR_CODE.DEFAULT, 'На сервере произошла ошибка');
+      errorHandler(res, ERROR_CODE.BAD_REQUEST, 'Переданы некорректные данные');
     });
 };
 
