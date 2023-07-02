@@ -51,7 +51,7 @@ const updateUser = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(ERROR_CODE).json({ message: 'Переданы некорректные данные при обновлении профиля' });
+    return res.status(SERVER_ERROR_CODE).json({ message: 'Внутренняя ошибка сервера' });
   }
 };
 
