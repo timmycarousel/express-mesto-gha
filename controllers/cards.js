@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 
 const ERROR_CODE = 400;
-const SERVER_ERROR_CODE = 500;
 
 // GET /cards - возвращает все карточки
 const getCards = (req, res) => {
@@ -9,8 +8,8 @@ const getCards = (req, res) => {
     .then((cards) => {
       res.status(200).json(cards);
     })
-    .catch(() => {
-      res.status(SERVER_ERROR_CODE).json({ error: 'Ошибка сервера' });
+    .catch((error) => {
+      res.send(error);
     });
 };
 
@@ -22,9 +21,9 @@ const createCard = (req, res) => {
       res.status(201).json(card);
     })
     .catch(() => {
-      res
-        .status(ERROR_CODE)
-        .json({ error: 'Переданы некорректные данные при создании карточки' });
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при создании карточки',
+      });
     });
 };
 
@@ -35,14 +34,12 @@ const deleteCard = (req, res) => {
       if (!card) {
         return res
           .status(404)
-          .json({ error: 'Передан несуществующий _id карточки' });
+          .json({ message: ' Карточка с указанным _id не найдена' });
       }
       return res.status(200).json(card);
     })
     .catch(() => {
-      res
-        .status(SERVER_ERROR_CODE)
-        .json({ error: 'Внутренняя ошибка сервера' });
+      res.status(500).json({ message: 'Внутренняя ошибка сервера' });
     });
 };
 
@@ -51,9 +48,9 @@ const likeCard = (req, res) => {
   const { cardId } = req.params;
 
   if (!cardId || typeof cardId !== 'string') {
-    return res
-      .status(ERROR_CODE)
-      .json({ error: 'Передан некорректный _id карточки' });
+    return res.status(ERROR_CODE).json({
+      message: 'Переданы некорректные данные для постановки/снятии лайка',
+    });
   }
 
   return Card.findByIdAndUpdate(
@@ -65,14 +62,14 @@ const likeCard = (req, res) => {
       if (!card) {
         return res
           .status(404)
-          .json({ error: 'Карточка с указанным _id не найдена' });
+          .json({ message: 'Передан несуществующий _id карточки' });
       }
       return res.status(200).json(card);
     })
     .catch(() => {
-      res
-        .status(ERROR_CODE)
-        .json({ error: 'Ошибка при добавлении лайка карточке' });
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные для постановки/снятии лайка',
+      });
     });
 };
 
