@@ -15,7 +15,7 @@ mongoose
 // Мидлвэр для временного решения авторизации
 app.use((req, res, next) => {
   req.user = {
-    _id: '649ea3ecd26dda6c5255abeb',
+    _id: '',
   };
   next();
 });

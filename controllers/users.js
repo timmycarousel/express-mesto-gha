@@ -9,11 +9,9 @@ const getUsers = (req, res) => {
       res.status(200).json(users);
     })
     .catch(() => {
-      res
-        .status(ERROR_CODE)
-        .json({
-          message: ' Переданы некорректные данные при создании пользователя',
-        });
+      res.status(ERROR_CODE).json({
+        message: ' Переданы некорректные данные при создании пользователя',
+      });
     });
 };
 
@@ -21,16 +19,16 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
+      res.status(200).json(user);
       if (!user) {
-        return res
+        res
           .status(404)
           .json({ message: 'Пользователь по указанному _id не найден' });
       }
-      return res.status(200).json(user);
     })
     .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при создании пользователя',
+      res.status(500).json({
+        message: 'Внутренняя ошибка сервера',
       });
     });
 };
@@ -80,11 +78,9 @@ const updateUserAvatar = (req, res) => {
       return res.status(200).json(user);
     })
     .catch(() => {
-      res
-        .status(ERROR_CODE)
-        .json({
-          message: ' Переданы некорректные данные при обновлении аватара',
-        });
+      res.status(ERROR_CODE).json({
+        message: ' Переданы некорректные данные при обновлении аватара',
+      });
     });
 };
 
