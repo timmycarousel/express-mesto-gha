@@ -51,10 +51,10 @@ const createUser = (req, res) => {
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   if (
-    req.body.name.lenght > 2
-    && req.body.name.lenght < 30
-    && req.body.about.lenght > 2
-    && req.body.about.lenght < 30
+    req.body.name.length > 2
+    && req.body.name.length < 30
+    && req.body.about.length > 2
+    && req.body.about.length < 30
   ) {
     User.findByIdAndUpdate(
       req.params.userId,
@@ -62,16 +62,17 @@ const updateUser = (req, res, next) => {
       { new: true, runValidators: true },
     )
       .then((user) => {
-        // res.status(200).json(user);
         if (!user) {
           res
             .status(404)
             .json({ message: 'Пользователь по указанному _id не найден' });
+        } else {
+          res.status(200).json(user);
         }
       })
       .catch(next);
   } else {
-    res.status(400).send({ message: 'Недопустимая длинна вводимых данных' });
+    res.status(400).send({ message: 'Недопустимая длина вводимых данных' });
   }
 };
 
