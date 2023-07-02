@@ -55,6 +55,8 @@ const updateUser = (req, res, next) => {
     && req.body.name.length < 30
     && req.body.about.length > 2
     && req.body.about.length < 30
+    && name
+    && about
   ) {
     User.findByIdAndUpdate(
       req.user._id,
