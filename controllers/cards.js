@@ -78,14 +78,16 @@ const likeCard = (req, res) => {
 
 // DELETE /cards/:cardId/likes - убирает лайк с карточки
 const dislikeCard = (req, res) => {
-  if (!req.params.cardId) {
+  const { cardId } = req.params;
+
+  if (!cardId || typeof cardId !== 'string') {
     return res
       .status(ERROR_CODE)
-      .json({ error: 'Переданы некорректные данные для снятия лайка' });
+      .json({ error: 'Передан некорректный _id карточки' });
   }
 
   return Card.findByIdAndUpdate(
-    req.params.cardId,
+    cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
   )
@@ -93,14 +95,14 @@ const dislikeCard = (req, res) => {
       if (!card) {
         return res
           .status(404)
-          .json({ error: 'Передан несуществующий _id карточки' });
+          .json({ error: 'Карточка с указанным _id не найдена' });
       }
       return res.status(200).json(card);
     })
     .catch(() => {
       res
         .status(ERROR_CODE)
-        .json({ error: 'Переданы некорректные данные для снятия лайка' });
+        .json({ error: 'Ошибка при удалении лайка с карточки' });
     });
 };
 
