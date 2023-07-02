@@ -50,18 +50,19 @@ const createUser = (req, res) => {
 // PATCH /users/me - обновляет информацию о пользователе
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
+  if (!name || !about) {
+    res.status(400).send({ message: 'Отсутствуют необходимые данные' });
+  }
   if (
     req.body.name.length > 2
     && req.body.name.length < 30
     && req.body.about.length > 2
     && req.body.about.length < 30
-    && name
-    && about
   ) {
     User.findByIdAndUpdate(
       req.user._id,
       { name, about },
-      { new: true, runValidators: true },
+      { new: true, about: true, runValidators: true },
     )
       .then((user) => {
         if (!user) {
