@@ -52,16 +52,16 @@ const updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.params.userId, { name, about }, { new: true })
     .then((user) => {
+      res.status(200).json(user);
       if (!user) {
-        return res
+        res
           .status(404)
-          .json({ message: 'Пользователь с указанным _id не найден' });
+          .json({ message: 'Пользователь по указанному _id не найден' });
       }
-      return res.status(200).json(user);
     })
     .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при обновлении профиля',
+      res.status(500).json({
+        message: 'Внутренняя ошибка сервера',
       });
     });
 };
