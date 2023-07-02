@@ -86,7 +86,7 @@ const dislikeCard = (req, res) => {
   return Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: req.user._id } },
-    { new: true },
+    { new: true, runValidators: true },
   )
     .then((card) => {
       if (!card) {
