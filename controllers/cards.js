@@ -39,11 +39,9 @@ const deleteCard = (req, res) => {
       return res.status(200).json(card);
     })
     .catch(() => {
-      res
-        .status(ERROR_CODE)
-        .json({
-          message: 'Переданы некорректные данные при удалении карточки',
-        });
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при удалении карточки',
+      });
     });
 };
 
@@ -84,7 +82,7 @@ const dislikeCard = (req, res) => {
   if (!cardId || typeof cardId !== 'string') {
     return res
       .status(ERROR_CODE)
-      .json({ error: 'Передан некорректный _id карточки' });
+      .json({ message: 'Передан некорректный _id карточки' });
   }
 
   return Card.findByIdAndUpdate(
@@ -103,7 +101,7 @@ const dislikeCard = (req, res) => {
     .catch(() => {
       res
         .status(ERROR_CODE)
-        .json({ error: 'Ошибка при удалении лайка с карточки' });
+        .json({ message: 'Ошибка при удалении лайка с карточки' });
     });
 };
 
