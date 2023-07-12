@@ -3,8 +3,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+// const router = require('express').Router();
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { createUser, login } = require('./controllers/users');
 
 app.use(bodyParser.json());
 
@@ -23,6 +25,10 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('Привет, мир!!!!');
 });
+
+app.post('/signin', login);
+
+app.post('/signup', createUser);
 
 // Регистрация маршрутов
 app.use('/users', usersRouter);

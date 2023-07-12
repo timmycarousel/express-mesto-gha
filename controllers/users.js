@@ -1,5 +1,6 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const { getJwtToken } = require('../helpers/jwt');
 
 const ERROR_CODE = 400;
 
@@ -8,27 +9,72 @@ const createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt
-    .hash(password, 10)
-    .then((hash) => User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
-    }))
+  if (!email || !password) {
+    return res
+      .status(ERROR_CODE)
+      .send({ message: 'email или пароль не могут быть пустые' });
+  }
+  return User.findOne({ email })
     .then((user) => {
-      res.status(200).json(user);
+      if (user) {
+        return res
+          .status(409)
+          .send({ message: 'пользователь с таким email уже зарегистрирован' });
+      }
+      return (
+        bcrypt
+          .hash(password, 10)
+          .then((hash) => User.create({
+            name,
+            about,
+            avatar,
+            email,
+            password: hash,
+          }))
+          // eslint-disable-next-line no-shadow
+          .then((user) => {
+            res.status(200).send(user);
+          })
+          .catch((err) => Promise.reject(err))
+      );
     })
     .catch(() => {
-      res.status(ERROR_CODE).json({
+      res.status(ERROR_CODE).send({
         message: 'Переданы некорректные данные при создании пользователя',
       });
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(ERROR_CODE)
+      .send({ message: 'email или пароль не могут быть пустые' });
+  }
+
+  return (
+    User.findOne({ email })
+      // eslint-disable-next-line consistent-return
+      .then((user) => {
+        if (!user) return res.status(401).send({ message: 'неверный логин или пароль' });
+        bcrypt.compare(password, user.password, (error, isValidPassword) => {
+          if (!isValidPassword) return res.status(401).send({ message: 'ошибка пароля' });
+
+          const token = getJwtToken(user.id);
+          return res.status(200).send({ token });
+        });
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+      })
+  );
+};
+
 // GET /users - возвращает всех пользователей
 const getUsers = (req, res) => {
+  // if (!isAuthorized(req.headers.autorization)) return res.status(401).send({ message: 'Вы не авторизованы' });
   User.find({})
     .then((users) => {
       res.status(200).json(users);
@@ -108,13 +154,10 @@ const updateUserAvatar = (req, res) => {
 };
 
 module.exports = {
-  updateUserAvatar,
-};
-
-module.exports = {
   getUsers,
   getUserById,
   createUser,
+  login,
   updateUser,
   updateUserAvatar,
 };

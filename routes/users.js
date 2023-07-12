@@ -2,13 +2,9 @@ const router = require('express').Router();
 const {
   getUsers,
   getUserById,
-  createUser,
   updateUser,
   updateUserAvatar,
 } = require('../controllers/users');
-
-// POST /users — создаёт пользователя
-router.post('/', createUser);
 
 // GET /users — возвращает всех пользователей
 router.get('/', getUsers);

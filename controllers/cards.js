@@ -1,4 +1,5 @@
 const Card = require('../models/card');
+const { isAuthorized } = require('../helpers/jwt');
 
 const ERROR_CODE = {
   BAD_REQUEST: 400,
@@ -13,7 +14,8 @@ const errorHandler = (res, statusCode, message) => {
 
 // GET /cards - возвращает все карточки
 const getCards = (req, res) => {
-  Card.find({})
+  if (!isAuthorized(req.headers.autorization)) return res.status(401).send({ message: 'Вы не авторизованы' });
+  return Card.find({})
     .then((cards) => {
       res.status(200).json(cards);
     })
