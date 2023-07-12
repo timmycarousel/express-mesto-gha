@@ -1,6 +1,31 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const ERROR_CODE = 400;
+
+// POST /users - создаёт пользователя
+const createUser = (req, res) => {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch(() => {
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при создании пользователя',
+      });
+    });
+};
 
 // GET /users - возвращает всех пользователей
 const getUsers = (req, res) => {
@@ -29,20 +54,6 @@ const getUserById = (req, res) => {
     .catch(() => {
       res.status(ERROR_CODE).json({
         message: 'Переданы некорректные данные при запросе пользователя',
-      });
-    });
-};
-
-// POST /users - создаёт пользователя
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch(() => {
-      res.status(ERROR_CODE).json({
-        message: 'Переданы некорректные данные при создании пользователя',
       });
     });
 };
