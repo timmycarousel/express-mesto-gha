@@ -63,6 +63,7 @@ const login = (req, res) => {
           if (!isValidPassword) return res.status(401).send({ message: 'ошибка пароля' });
 
           const token = getJwtToken(user.id);
+          res.setHeader('Authorization', `Bearer ${token}`); // Добавляем токен в заголовки ответа
           return res.status(200).send({ token });
         });
       })
@@ -73,8 +74,8 @@ const login = (req, res) => {
 };
 
 // GET /users - возвращает всех пользователей
+// eslint-disable-next-line consistent-return
 const getUsers = (req, res) => {
-  // if (!isAuthorized(req.headers.autorization)) return res.status(401).send({ message: 'Вы не авторизованы' });
   User.find({})
     .then((users) => {
       res.status(200).json(users);
@@ -102,6 +103,15 @@ const getUserById = (req, res) => {
         message: 'Переданы некорректные данные при запросе пользователя',
       });
     });
+};
+
+const getUserInfo = (req, res) => {
+  const userInfo = {
+    name: req.user.name,
+    email: req.user.email,
+  };
+
+  res.status(200).json(userInfo);
 };
 
 // PATCH /users/me - обновляет информацию о пользователе
@@ -158,6 +168,7 @@ module.exports = {
   getUserById,
   createUser,
   login,
+  getUserInfo,
   updateUser,
   updateUserAvatar,
 };

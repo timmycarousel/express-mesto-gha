@@ -1,4 +1,5 @@
 const express = require('express');
+const { auth } = require('../middlewares/auth');
 
 const router = express.Router();
 const {
@@ -10,7 +11,7 @@ const {
 } = require('../controllers/cards');
 
 // Получение всех карточек
-router.get('/', getCards);
+router.get('/', auth, getCards);
 
 // Создание карточки
 router.post('/', createCard);

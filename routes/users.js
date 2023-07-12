@@ -1,13 +1,17 @@
 const router = require('express').Router();
+
 const {
   getUsers,
   getUserById,
   updateUser,
   updateUserAvatar,
+  getUserInfo,
 } = require('../controllers/users');
 
 // GET /users — возвращает всех пользователей
 router.get('/', getUsers);
+
+router.get('/me', getUserInfo);
 
 // GET /users/:userId - возвращает пользователя по _id
 router.get('/:userId', getUserById);
