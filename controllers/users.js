@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { getJwtToken } = require('../helpers/jwt');
 
 const ERROR_CODE = 400;
 
@@ -62,8 +62,20 @@ const login = (req, res) => {
         bcrypt.compare(password, user.password, (error, isValidPassword) => {
           if (!isValidPassword) return res.status(401).send({ message: 'ошибка пароля' });
 
-          const token = getJwtToken(user.id);
-          res.setHeader('Authorization', `Bearer ${token}`); // Добавляем токен в заголовки ответа
+          const token = jwt.sign({ _id: user.id }, 'strong-secret', {
+            expiresIn: '7d',
+          });
+
+          // req.user = {
+          //   _id: user._id,
+          //   email: user.email,
+          //   name: user.name,
+          //   about: user.about,
+          //   avatar: user.avatar,
+          // };
+
+          res.cookie('Authorization', `Bearer ${token}`, { httpOnly: true }); // Отправка токена через куки
+
           return res.status(200).send({ token });
         });
       })
@@ -106,12 +118,31 @@ const getUserById = (req, res) => {
 };
 
 const getUserInfo = (req, res) => {
-  const userInfo = {
-    name: req.user.name,
-    email: req.user.email,
-  };
+  const userId = req.user._id;
+  console.log(userId);
 
-  res.status(200).json(userInfo);
+  User.findById(userId)
+    // eslint-disable-next-line consistent-return
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(404)
+          .send({ message: 'Пользователь c таким _id не найден' });
+      }
+      res.send({
+        _id: user._id,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(ERROR_CODE).json({
+        message: 'Переданы некорректные данные при запросе пользователя',
+      });
+    });
 };
 
 // PATCH /users/me - обновляет информацию о пользователе
