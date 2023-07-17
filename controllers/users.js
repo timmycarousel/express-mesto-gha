@@ -55,7 +55,8 @@ const login = (req, res) => {
   }
 
   return (
-    User.findOne({ email }.select('+password'))
+    User.findOne({ email })
+      .select('+password')
       // eslint-disable-next-line consistent-return
       .then((user) => {
         if (!user) return res.status(401).send({ message: 'неверный логин или пароль' });

@@ -17,14 +17,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use(auth);
-
 // Регистрация маршрутов
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 
 // Обработчик GET-запроса на корневой URL
-app.get('/', (req, res) => {
+app.get('/', auth, (req, res) => {
   res.send('Привет, мир!!!!');
 });
 

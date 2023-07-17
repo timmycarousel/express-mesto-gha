@@ -14,15 +14,15 @@ const {
 router.get('/', auth, getCards);
 
 // Создание карточки
-router.post('/', createCard);
+router.post('/', auth, createCard);
 
 // Удаление карточки по идентификатору
-router.delete('/:cardId', deleteCard);
+router.delete('/:cardId', auth, deleteCard);
 
 // Добавление лайка карточке
-router.put('/:cardId/likes', likeCard);
+router.put('/:cardId/likes', auth, likeCard);
 
 // Удаление лайка с карточки
-router.delete('/:cardId/likes', dislikeCard);
+router.delete('/:cardId/likes', auth, dislikeCard);
 
 module.exports = router;

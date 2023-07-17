@@ -10,23 +10,20 @@ const {
   getUserInfo,
 } = require('../controllers/users');
 
-router.use(auth);
-router.get(auth);
-
 // GET /users — возвращает всех пользователей
-router.get('/', getUsers);
+router.get('/', auth, getUsers);
 
 router.use(cookieParser());
 
-router.get('/me', getUserInfo);
+router.get('/me', auth, getUserInfo);
 
 // GET /users/:userId - возвращает пользователя по _id
-router.get('/:userId', getUserById);
+router.get('/:userId', auth, getUserById);
 
 // PATCH /users/:userId - обновляет профиль пользователя
-router.patch('/me', updateUser);
+router.patch('/me', auth, updateUser);
 
 // PATCH /users/me/avatar - обновляет аватар пользователя
-router.patch('/me/avatar', updateUserAvatar);
+router.patch('/me/avatar', auth, updateUserAvatar);
 
 module.exports = router;
