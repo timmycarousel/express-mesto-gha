@@ -6,6 +6,7 @@ const { auth } = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
+const { error } = require('./middlewares/error');
 
 const app = express();
 app.use(cookieParser());
@@ -35,14 +36,16 @@ app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страницы не существует' });
 });
 
-app.use((err, req, res, next) => {
-  if (err.status === 400) {
-    res.status(400).json({ message: 'Переданы некорректные данные' });
-  }
-  if (err.status === 404) {
-    res.status(404).json({ message: 'Ресурс не найден' });
-  }
-  res.status(500).json({ message: 'На сервере произошла ошибка' });
-});
+// app.use((err, req, res, next) => {
+//   if (err.status === 400) {
+//     res.status(400).json({ message: 'Переданы некорректные данные' });
+//   }
+//   if (err.status === 404) {
+//     res.status(404).json({ message: 'Ресурс не найден' });
+//   }
+//   res.status(500).json({ message: 'На сервере произошла ошибка' });
+// });
+
+app.use(error);
 
 module.exports = app;
