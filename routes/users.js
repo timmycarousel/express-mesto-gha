@@ -10,10 +10,10 @@ const {
   getUserInfo,
 } = require('../controllers/users');
 
+router.use(cookieParser());
+
 // GET /users — возвращает всех пользователей
 router.get('/', auth, getUsers);
-
-router.use(cookieParser());
 
 router.get('/me', auth, getUserInfo);
 
