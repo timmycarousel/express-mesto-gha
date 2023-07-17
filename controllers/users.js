@@ -60,8 +60,10 @@ const login = (req, res) => {
       // eslint-disable-next-line consistent-return
       .then((user) => {
         if (!user) return res.status(401).send({ message: 'неверный логин или пароль' });
+        res.clearCookie('Authorization', { httpOnly: true });
         bcrypt.compare(password, user.password, (error, isValidPassword) => {
           if (!isValidPassword) return res.status(401).send({ message: 'ошибка пароля' });
+          res.clearCookie('Authorization', { httpOnly: true });
 
           const token = jwt.sign({ _id: user.id }, 'strong-secret', {
             expiresIn: '7d',

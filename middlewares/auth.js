@@ -9,7 +9,9 @@ app.use(cookieParser());
 
 // eslint-disable-next-line consistent-return
 const auth = (req, res, next) => {
-  const token = req.cookies.Authorization.replace('Bearer ', '');
+  const token = req.cookies && req.cookies.Authorization
+    ? req.cookies.Authorization.replace('Bearer ', '')
+    : null;
   console.log(req.cookies);
 
   if (!token) {
