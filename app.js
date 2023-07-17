@@ -35,7 +35,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страницы не существует' });
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   if (err.status === 400) {
     res.status(400).json({ message: 'Переданы некорректные данные' });
   }

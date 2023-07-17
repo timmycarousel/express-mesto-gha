@@ -1,4 +1,4 @@
-const Card = require("../models/card");
+const Card = require('../models/card');
 
 const ERROR_CODE = {
   BAD_REQUEST: 400,
@@ -18,7 +18,7 @@ const getCards = (req, res) => {
       res.status(200).json(cards);
     })
     .catch(() => {
-      errorHandler(res, ERROR_CODE.DEFAULT, "На сервере произошла ошибка");
+      errorHandler(res, ERROR_CODE.DEFAULT, 'На сервере произошла ошибка');
     });
 };
 
@@ -33,7 +33,7 @@ const createCard = (req, res) => {
       errorHandler(
         res,
         ERROR_CODE.BAD_REQUEST,
-        "Переданы некорректные данные при создании карточки"
+        'Переданы некорректные данные при создании карточки',
       );
     });
 };
@@ -48,7 +48,7 @@ const deleteCard = (req, res) => {
       if (!card) {
         return errorHandler(() => {
           res.status(403).send({
-            message: "Карточка с указанным ID не найдена или у вас нет доступа",
+            message: 'Карточка с указанным ID не найдена или у вас нет доступа',
           });
         });
       }
@@ -56,7 +56,7 @@ const deleteCard = (req, res) => {
     })
     .catch(() => {
       res.status(404).send({
-        message: "Карточка с указанным ID не найдена или у вас нет доступа",
+        message: 'Карточка с указанным ID не найдена или у вас нет доступа',
       });
     });
 };
@@ -65,31 +65,31 @@ const deleteCard = (req, res) => {
 const likeCard = (req, res) => {
   const { cardId } = req.params;
 
-  if (!cardId || typeof cardId !== "string") {
+  if (!cardId || typeof cardId !== 'string') {
     return errorHandler(
       res,
       ERROR_CODE.BAD_REQUEST,
-      "Переданы некорректные данные для постановки/снятии лайка"
+      'Переданы некорректные данные для постановки/снятии лайка',
     );
   }
 
   return Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((card) => {
       if (!card) {
         return errorHandler(
           res,
           ERROR_CODE.NOT_FOUND,
-          "Передан несуществующий _id карточки"
+          'Передан несуществующий _id карточки',
         );
       }
       return res.status(200).json(card);
     })
     .catch(() => {
-      errorHandler(res, ERROR_CODE.BAD_REQUEST, "На сервере произошла ошибка");
+      errorHandler(res, ERROR_CODE.BAD_REQUEST, 'На сервере произошла ошибка');
     });
 };
 
@@ -97,31 +97,31 @@ const likeCard = (req, res) => {
 const dislikeCard = (req, res) => {
   const { cardId } = req.params;
 
-  if (!cardId || typeof cardId !== "string") {
+  if (!cardId || typeof cardId !== 'string') {
     return errorHandler(
       res,
       ERROR_CODE.BAD_REQUEST,
-      "Передан некорректный _id карточки"
+      'Передан некорректный _id карточки',
     );
   }
 
   return Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: req.user._id } },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((card) => {
       if (!card) {
         return errorHandler(
           res,
           ERROR_CODE.NOT_FOUND,
-          "Карточка с указанным _id не найдена"
+          'Карточка с указанным _id не найдена',
         );
       }
       return res.status(200).json(card);
     })
     .catch(() => {
-      errorHandler(res, ERROR_CODE.BAD_REQUEST, "Переданы некорректные данные");
+      errorHandler(res, ERROR_CODE.BAD_REQUEST, 'Переданы некорректные данные');
     });
 };
 
