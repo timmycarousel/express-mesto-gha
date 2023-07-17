@@ -45,11 +45,14 @@ const deleteCard = (req, res) => {
   Card.findOneAndDelete({ _id: cardId, owner: req.user._id })
     .then((card) => {
       if (!card) {
-        return errorHandler(
-          res,
-          ERROR_CODE.NOT_FOUND,
-          'Карточка с указанным _id не найдена или у вас нет доступа для удаления',
-        );
+        return errorHandler(() => {
+          res
+            .status(403)
+            .send({
+              message:
+                'Карточка с указанным ID не найдена или у вас нет доступа',
+            });
+        });
       }
       return res.status(200).json(card);
     })
