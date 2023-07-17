@@ -39,6 +39,7 @@ const createCard = (req, res) => {
 };
 
 // DELETE /cards/:cardId - удаляет карточку по идентификатору
+
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
 
@@ -46,12 +47,9 @@ const deleteCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return errorHandler(() => {
-          res
-            .status(403)
-            .send({
-              message:
-                'Карточка с указанным ID не найдена или у вас нет доступа',
-            });
+          res.status(403).send({
+            message: 'Карточка с указанным ID не найдена или у вас нет доступа',
+          });
         });
       }
       return res.status(200).json(card);
