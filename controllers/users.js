@@ -55,7 +55,7 @@ const login = (req, res) => {
   }
 
   return (
-    User.findOne({ email })
+    User.findOne({ email }.select('+password'))
       // eslint-disable-next-line consistent-return
       .then((user) => {
         if (!user) return res.status(401).send({ message: 'неверный логин или пароль' });
@@ -65,14 +65,6 @@ const login = (req, res) => {
           const token = jwt.sign({ _id: user.id }, 'strong-secret', {
             expiresIn: '7d',
           });
-
-          // req.user = {
-          //   _id: user._id,
-          //   email: user.email,
-          //   name: user.name,
-          //   about: user.about,
-          //   avatar: user.avatar,
-          // };
 
           res.cookie('Authorization', `Bearer ${token}`, { httpOnly: true }); // Отправка токена через куки
 
