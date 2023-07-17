@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const cookieParser = require('cookie-parser');
+const { auth } = require('../middlewares/auth');
 
 const {
   getUsers,
@@ -8,6 +9,9 @@ const {
   updateUserAvatar,
   getUserInfo,
 } = require('../controllers/users');
+
+router.use(auth);
+router.get(auth);
 
 // GET /users — возвращает всех пользователей
 router.get('/', getUsers);
