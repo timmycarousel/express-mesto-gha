@@ -36,7 +36,7 @@ app.post(
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().required().pattern(linkRegex),
+      avatar: Joi.string().pattern(linkRegex),
       email: Joi.string().required().email().pattern(emailRegex),
       password: Joi.string().required(),
     }),

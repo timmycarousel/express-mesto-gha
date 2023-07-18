@@ -1,6 +1,6 @@
-const validator = require('validator');
-
 const mongoose = require('mongoose');
+
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -13,12 +13,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: [2, 'Мало символов'],
     maxlength: [30, 'Много символов'],
-    default: 'Исследователь',
+    default: 'Исследователь океана',
   },
   avatar: {
     type: String,
     default:
-      'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+      'https://www.pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (value) => validator.isURL(value),
       message: 'Некорректный формат ссылки',
