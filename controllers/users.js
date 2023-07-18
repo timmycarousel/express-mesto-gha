@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
-const ConflictError = require('../errors/coflict-err');
+const ConflictError = require('../errors/conflict-err');
 const BadRequestError = require('../errors/bad-request-err');
 
 const createUser = (req, res, next) => {
@@ -25,21 +25,14 @@ const createUser = (req, res, next) => {
       .status(201)
       .send({ message: `Пользователь ${email} успешно зарегистрирован.` }))
     .catch((err) => {
-      const errors = [];
-
       if (err.name === 'ValidationError') {
-        errors.push(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else if (err.code === 11000) {
+        console.log('уже есть такой e-mail');
+        next(new ConflictError('Такой пользователь уже существует'));
+      } else {
+        next(err);
       }
-
-      if (err.code === 11000) {
-        errors.push(new ConflictError('Такой пользователь уже существует'));
-      }
-
-      if (errors.length === 0) {
-        errors.push(err);
-      }
-
-      next(errors);
     });
 };
 
@@ -47,6 +40,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
+    console.log('где логин или пароль?');
     throw new BadRequestError('Email или пароль не могут быть пустыми');
   }
 
