@@ -39,33 +39,41 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    console.log('где логин или пароль?');
-    throw new BadRequestError('Email или пароль не могут быть пустыми');
-  }
+  // if (!email || !password) {
+  //   console.log('где логин или пароль?');
+  //   throw new BadRequestError('Email или пароль не могут быть пустыми');
+  // }
 
   let foundUser; // Объявление переменной user
 
-  return User.findOne({ email })
+  User.findOne({ email })
     .select('+password')
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError('Неверный логин или пароль');
       }
+
       foundUser = user; // Сохранение найденного пользователя в переменную
-      res.clearCookie('Authorization', { httpOnly: true });
-      return bcrypt.compare(password, user.password).then((isValidPassword) => {
-        if (!isValidPassword) {
-          console.log('некорректный пароль');
-          throw new UnauthorizedError('Неверный логин или пароль');
-        }
-        const token = jwt.sign({ _id: foundUser.id }, 'strong-secret', {
-          expiresIn: '7d',
+
+      // res.clearCookie('Authorization', { httpOnly: true });
+
+      return bcrypt
+        .compare(password, foundUser.password)
+        .then((isValidPassword) => {
+          if (!isValidPassword) {
+            console.log('некорректный пароль');
+            throw new UnauthorizedError('Неверный логин или пароль');
+          }
+
+          const token = jwt.sign({ _id: foundUser.id }, 'strong-secret', {
+            expiresIn: '7d',
+          });
+
+          res.cookie('Authorization', `Bearer ${token}`, { httpOnly: true });
+
+          console.log('корректный пароль');
+          return res.status(200).send({ token });
         });
-        res.cookie('Authorization', `Bearer ${token}`, { httpOnly: true });
-        console.log('корректный пароль');
-        res.status(200).send({ token });
-      });
     })
     .catch(next);
 };
@@ -83,8 +91,9 @@ const getUserById = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден');
+      } else {
+        res.status(200).json(user);
       }
-      res.status(200).json(user);
     })
     .catch(next);
 };
@@ -95,14 +104,15 @@ const getUserInfo = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь c таким _id не найден');
+      } else {
+        res.send({
+          _id: user._id,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        });
       }
-      res.send({
-        _id: user._id,
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
     })
     .catch(next);
 };
@@ -111,8 +121,7 @@ const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   if (!name || !about) {
     throw new BadRequestError('Отсутствуют необходимые данные');
-  }
-  if (
+  } else if (
     req.body.name.length > 2
     && req.body.name.length < 30
     && req.body.about.length > 2
@@ -141,8 +150,9 @@ const updateUserAvatar = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден');
+      } else {
+        res.status(200).json(user);
       }
-      res.status(200).json(user);
     })
     .catch(next);
 };
