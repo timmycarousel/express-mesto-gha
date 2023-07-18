@@ -1,4 +1,5 @@
 const express = require('express');
+const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -14,15 +15,52 @@ const {
 router.get('/', auth, getCards);
 
 // Создание карточки
-router.post('/', auth, createCard);
+router.post(
+  '/',
+  auth,
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30).required(),
+      link: Joi.string().required(),
+    }),
+  }),
+  createCard,
+);
 
 // Удаление карточки по идентификатору
-router.delete('/:cardId', auth, deleteCard);
+router.delete(
+  '/:cardId',
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  auth,
+  deleteCard,
+);
 
 // Добавление лайка карточке
-router.put('/:cardId/likes', auth, likeCard);
+router.put(
+  '/:cardId/likes',
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  auth,
+  likeCard,
+);
 
 // Удаление лайка с карточки
-router.delete('/:cardId/likes', auth, dislikeCard);
+router.delete(
+  '/:cardId/likes',
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  auth,
+  dislikeCard,
+);
 
 module.exports = router;
