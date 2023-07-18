@@ -1,6 +1,7 @@
 const express = require('express');
 const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
+const { linkRegex } = require('../middlewares/validation');
 
 const router = express.Router();
 const {
@@ -21,7 +22,7 @@ router.post(
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30).required(),
-      link: Joi.string().required(),
+      link: Joi.string().required().pattern(linkRegex),
     }),
   }),
   createCard,

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
+const { linkRegex } = require('../middlewares/validation');
 
 const {
   getUsers,
@@ -49,7 +50,7 @@ router.patch(
   auth,
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string().required(),
+      avatar: Joi.string().required().pattern(linkRegex),
     }),
   }),
   updateUserAvatar,

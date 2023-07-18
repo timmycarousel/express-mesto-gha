@@ -8,7 +8,10 @@ const { auth } = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
+
+const NotFoundError = require('./errors/not-found-err');
 const error = require('./middlewares/error');
+const { linkRegex, emailRegex } = require('./middlewares/validation');
 
 const app = express();
 app.use(cookieParser());
@@ -21,7 +24,7 @@ app.post(
   '/signin',
   celebrate({
     body: Joi.object().keys({
-      email: Joi.string().required().email(),
+      email: Joi.string().required().email().pattern(emailRegex),
       password: Joi.string().required(),
     }),
   }),
@@ -33,8 +36,8 @@ app.post(
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string(),
-      email: Joi.string().required().email(),
+      avatar: Joi.string().required().pattern(linkRegex),
+      email: Joi.string().required().email().pattern(emailRegex),
       password: Joi.string().required(),
     }),
   }),
@@ -55,10 +58,8 @@ app.listen(3000, () => {
   console.log('Сервер запущен на порту 3000');
 });
 
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Страницы не существует' });
-});
-app.use(error);
+app.use((req, res, next) => next(new NotFoundError('Страницы по запрошенному URL не существует')));
 app.use(errors());
+app.use(error);
 
 module.exports = app;

@@ -60,4 +60,6 @@ module.exports = {
   validateCreateCard,
   validateCardId,
   validateUserId,
+  emailRegex,
+  linkRegex,
 };
