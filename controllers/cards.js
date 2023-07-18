@@ -55,7 +55,7 @@ const deleteCard = (req, res) => {
       return res.status(200).json(card);
     })
     .catch(() => {
-      res.status(404).send({
+      res.status(403).send({
         message: 'Карточка с указанным ID не найдена или у вас нет доступа',
       });
     });
