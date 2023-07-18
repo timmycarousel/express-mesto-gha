@@ -47,7 +47,7 @@ const deleteCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return errorHandler(() => {
-          res.status(403).send({
+          res.status(404).send({
             message: 'Карточка с указанным ID не найдена или у вас нет доступа',
           });
         });
