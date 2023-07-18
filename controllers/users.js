@@ -12,6 +12,7 @@ const createUser = (req, res, next) => {
   } = req.body;
 
   //* * хэшируем пароль при отправке в БД + сложность соли */
+
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
