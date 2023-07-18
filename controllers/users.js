@@ -1,28 +1,19 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFoundError } = require('../errors/not-found-err');
-const { UnauthorizedError } = require('../errors/unauthorized-err');
-const { ConflictError } = require('../errors/coflict-err');
-const { BadRequestError } = require('../errors/bad-request-err');
+const NotFoundError = require('../errors/not-found-err');
+const UnauthorizedError = require('../errors/unauthorized-err');
+const ConflictError = require('../errors/coflict-err');
+const BadRequestError = require('../errors/bad-request-err');
 
-// POST /users - создаёт пользователя
 const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (!email || !password) {
-    throw new BadRequestError('Email или пароль не могут быть пустыми');
-  }
-  return User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        throw new ConflictError(
-          'Пользователь с таким email уже зарегистрирован',
-        );
-      }
-      return bcrypt.hash(password, 10);
-    })
+
+  //* * хэшируем пароль при отправке в БД + сложность соли */
+  bcrypt
+    .hash(password, 10)
     .then((hash) => User.create({
       name,
       about,
@@ -30,10 +21,26 @@ const createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => {
-      res.status(200).send(user);
-    })
-    .catch(next);
+    .then(() => res
+      .status(201)
+      .send({ message: `Пользователь ${email} успешно зарегистрирован.` }))
+    .catch((err) => {
+      const errors = [];
+
+      if (err.name === 'ValidationError') {
+        errors.push(new BadRequestError('Переданы некорректные данные'));
+      }
+
+      if (err.code === 11000) {
+        errors.push(new ConflictError('Такой пользователь уже существует'));
+      }
+
+      if (errors.length === 0) {
+        errors.push(err);
+      }
+
+      next(errors);
+    });
 };
 
 const login = (req, res, next) => {
@@ -49,22 +56,22 @@ const login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким email');
+        throw new UnauthorizedError('Неверный логин или пароль');
       }
       foundUser = user; // Сохранение найденного пользователя в переменную
       res.clearCookie('Authorization', { httpOnly: true });
-      return bcrypt.compare(password, user.password);
-    })
-    .then((isValidPassword) => {
-      if (!isValidPassword) {
-        throw new UnauthorizedError('Неверный логин или пароль');
-      }
-      res.clearCookie('Authorization', { httpOnly: true });
-      const token = jwt.sign({ _id: foundUser.id }, 'strong-secret', {
-        expiresIn: '7d',
+      return bcrypt.compare(password, user.password).then((isValidPassword) => {
+        if (!isValidPassword) {
+          console.log('некорректный пароль');
+          throw new UnauthorizedError('Неверный логин или пароль');
+        }
+        const token = jwt.sign({ _id: foundUser.id }, 'strong-secret', {
+          expiresIn: '7d',
+        });
+        res.cookie('Authorization', `Bearer ${token}`, { httpOnly: true });
+        console.log('корректный пароль');
+        res.status(200).send({ token });
       });
-      res.cookie('Authorization', `Bearer ${token}`, { httpOnly: true });
-      res.status(200).send({ token });
     })
     .catch(next);
 };
