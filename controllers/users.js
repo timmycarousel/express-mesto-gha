@@ -131,34 +131,36 @@ const getUserInfo = (req, res, next) => {
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  if (!name || !about) {
-    throw new BadRequestError('Отсутствуют необходимые данные');
-  } else if (
-    req.body.name.length > 2
-    && req.body.name.length < 30
-    && req.body.about.length > 2
-    && req.body.about.length < 30
-  ) {
-    User.findByIdAndUpdate(
-      req.user._id,
-      { name, about },
-      { new: true, about: true, runValidators: true },
-    )
-      .then((user) => {
-        if (!user) {
-          throw new NotFoundError('Пользователь по указанному _id не найден');
-        }
-        res.status(200).json(user);
-      })
-      .catch(next);
-  } else {
-    throw new BadRequestError('Недопустимая длина вводимых данных');
-  }
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true },
+    { runValidators: true },
+  )
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь по указанному _id не найден');
+      }
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Отсутствуют необходимые дагнные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true },
+    { runValidators: true },
+  )
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден');
