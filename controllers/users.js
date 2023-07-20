@@ -44,11 +44,6 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  // if (!email || !password) {
-  //   console.log('где логин или пароль?');
-  //   throw new BadRequestError('Email или пароль не могут быть пустыми');
-  // }
-
   let foundUser; // Объявление переменной user
 
   User.findOne({ email })
