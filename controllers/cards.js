@@ -55,14 +55,10 @@ const deleteCard = (req, res, next) => {
 const likeCard = (req, res, next) => {
   const { cardId } = req.params;
 
-  if (!cardId || typeof cardId !== 'string') {
-    next(new BadRequestError('Карточка не найдена'));
-  }
-
-  return Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true, runValidators: true },
+    { new: true },
   )
     .then((card) => {
       if (!card) {
@@ -83,14 +79,10 @@ const likeCard = (req, res, next) => {
 const dislikeCard = (req, res, next) => {
   const { cardId } = req.params;
 
-  if (!cardId || typeof cardId !== 'string') {
-    next(new BadRequestError('Карточка не найдена'));
-  }
-
-  return Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: req.user._id } },
-    { new: true, runValidators: true },
+    { new: true },
   )
     .then((card) => {
       if (!card) {
