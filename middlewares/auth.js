@@ -15,7 +15,7 @@ const auth = (req, res, next) => {
   console.log(req.cookies);
 
   if (!token) {
-    next(new UnauthorizedError('Неверный токен авторизации'));
+    return next(new UnauthorizedError('Неверный токен авторизации'));
   }
 
   let payload;
@@ -23,7 +23,7 @@ const auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'strong-secret');
   } catch (err) {
-    next(new UnauthorizedError('Неверный токен авторизации'));
+    return next(new UnauthorizedError('Неверный токен авторизации'));
   }
 
   req.user = payload;
