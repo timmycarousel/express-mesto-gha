@@ -1,9 +1,9 @@
 const express = require('express');
-
-const app = express();
-
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('../errors/unauthorized-err');
+
+const app = express();
 
 app.use(cookieParser());
 
@@ -15,7 +15,7 @@ const auth = (req, res, next) => {
   console.log(req.cookies);
 
   if (!token) {
-    return res.status(401).json({ message: 'Необходима авторизация' });
+    next(new UnauthorizedError('Неверный токен авторизации'));
   }
 
   let payload;
@@ -23,7 +23,7 @@ const auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'strong-secret');
   } catch (err) {
-    return res.status(401).json({ message: 'Неверный токен авторизации' });
+    next(new UnauthorizedError('Неверный токен авторизации'));
   }
 
   req.user = payload;
